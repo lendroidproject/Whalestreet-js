@@ -1,1 +1,2 @@
-export { default as WhalestreetJS } from './lib/NFT';
+import WhalestreetJS from './lib/Whalestreet';
+export default WhalestreetJS;
