@@ -5,14 +5,14 @@ import Library from './index';
 test('contructor', async t => {
   const library = Library(null, {
     addresses: {
-      FRight: '0xFc248D053E8E5F71542c0F4956f0292453393A87',
-      IRight: '0xdb210A5da035d160c7528BeCc349d58156818E7C',
-      RightsDao: '0xa43F7069C723587dedaC7c3c82C2f913a1806ff2'
-    },
+      $HRIMP: '0x7186013ABe25De7dd79e191f3251bE73B72Db037',
+      LSTETHPool: '0xdF011A6c60Ca415a24D2db7Feb862E8Dc2664f7D',
+      LST_WETH_UNI_V2: '0xFB5b443ae22080b456C4b5ff2c06a4aD987B89A7'
+    }
   });
   t.deepEqual(library.addresses, {
-    FRight: '0xFc248D053E8E5F71542c0F4956f0292453393A87',
-    IRight: '0xdb210A5da035d160c7528BeCc349d58156818E7C',
-    RightsDao: '0xa43F7069C723587dedaC7c3c82C2f913a1806ff2'
+    $HRIMP: '0x7186013ABe25De7dd79e191f3251bE73B72Db037',
+    LSTETHPool: '0xdF011A6c60Ca415a24D2db7Feb862E8Dc2664f7D',
+    LST_WETH_UNI_V2: '0xFB5b443ae22080b456C4b5ff2c06a4aD987B89A7'
   });
 });
