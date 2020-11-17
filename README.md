@@ -1,8 +1,8 @@
 # Whalestreet-js
 
-Javsacript library for Whalestreet
+JavaScript library for Whalestreet
 
-This proect is powered by [typescript-starter](https://bitjson.github.io/typescript-starter/).
+This project is powered by [typescript-starter](https://bitjson.github.io/typescript-starter/).
 
 ## Installation
 
