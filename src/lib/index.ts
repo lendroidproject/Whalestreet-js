@@ -1,10 +1,6 @@
 import Farming from './Farming';
 
-interface WhalestreetJS {
-  readonly Farming: any;
-}
-
-const library:WhalestreetJS = {
+const library:any = {
   Farming
 };
 
