@@ -1,2 +1,2 @@
-import WhalestreetJS from './lib/Whalestreet';
+import WhalestreetJS from './lib';
 export default WhalestreetJS;
