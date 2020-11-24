@@ -1,6 +1,8 @@
+import Auctions from './Auctions';
 import Farming from './Farming';
 
-const library:any = {
+const library: any = {
+  Auctions,
   Farming
 };
 
