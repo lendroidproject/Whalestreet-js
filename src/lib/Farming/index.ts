@@ -56,8 +56,11 @@ export default (provider: any, options: Options) => {
     },
     LSTETHPool: {
       claim: send(contracts.LSTETHPool.methods.claim),
+      currentEpoch: send(contracts.LSTETHPool.methods.currentEpoch),
+      epochEndTimeFromTimestamp: send(contracts.LSTETHPool.methods.epochEndTimeFromTimestamp),
       getBalance: call(contracts.LSTETHPool.methods.balanceOf),
       getEarned: call(contracts.LSTETHPool.methods.earned),
+      rewardRate: send(contracts.LSTETHPool.methods.rewardRate),
       stake: send(contracts.LSTETHPool.methods.stake),
       totalSupply: call(contracts.LSTETHPool.methods.totalSupply),
       unstake: send(contracts.LSTETHPool.methods.unstake)
