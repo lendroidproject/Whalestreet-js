@@ -81,6 +81,19 @@ export default (provider: any, options: Options) => {
         )
     },
     web3: {
+      getBlock: (field: string = 'timestamp') =>
+        new Promise((resolve, reject) =>
+          instance.eth
+            .getBlock('latest')
+            .then((block: any) => {
+              if (field) {
+                resolve(block[field]);
+              } else {
+                resolve(block);
+              }
+            })
+            .catch(reject)
+        ),
       setProvider: (prov: any) => {
         instance.setProvider(prov);
         contracts.$HRIMP = new instance.eth.Contract(
