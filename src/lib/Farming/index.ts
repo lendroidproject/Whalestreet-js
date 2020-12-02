@@ -4,6 +4,7 @@
 import Web3 from 'web3';
 
 import $HRIMP from './ABIs/$HRIMP.json';
+import ERC20 from './ABIs/ERC20.json';
 import LSTETHPool from './ABIs/LSTETHPool.json';
 import LSTWETHUNIV2 from './ABIs/LSTWETHUNIV2.json';
 
@@ -30,6 +31,7 @@ export default (provider: any, options: Options) => {
   const { addresses, onEvent } = options;
   const contracts = {
     $HRIMP: new instance.eth.Contract($HRIMP as any, addresses.$HRIMP),
+    LST: new instance.eth.Contract(ERC20 as any, addresses.LST),
     LSTETHPool: new instance.eth.Contract(
       LSTETHPool as any,
       addresses.LSTETHPool
@@ -48,11 +50,16 @@ export default (provider: any, options: Options) => {
       getBalance: call(contracts.$HRIMP.methods.balanceOf),
       totalSupply: call(contracts.$HRIMP.methods.totalSupply)
     },
+    LST: {
+      getBalance: call(contracts.LST.methods.balanceOf),
+      totalSupply: call(contracts.LST.methods.totalSupply)
+    },
     LSTETHPool: {
       claim: send(contracts.LSTETHPool.methods.claim),
       getBalance: call(contracts.LSTETHPool.methods.balanceOf),
       getEarned: call(contracts.LSTETHPool.methods.earned),
       stake: send(contracts.LSTETHPool.methods.stake),
+      totalSupply: call(contracts.LSTETHPool.methods.totalSupply),
       unstake: send(contracts.LSTETHPool.methods.unstake)
     },
     LSTWETHUNIV2: {
