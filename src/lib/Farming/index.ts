@@ -55,6 +55,7 @@ export default (provider: any, options: Options) => {
       totalSupply: call(contracts.LST.methods.totalSupply)
     },
     LSTETHPool: {
+      EPOCH_PERIOD: call(contracts.LSTETHPool.methods.EPOCH_PERIOD),
       HEART_BEAT_START_TIME: call(contracts.LSTETHPool.methods.HEART_BEAT_START_TIME),
       claim: send(contracts.LSTETHPool.methods.claim),
       currentEpoch: call(contracts.LSTETHPool.methods.currentEpoch),
