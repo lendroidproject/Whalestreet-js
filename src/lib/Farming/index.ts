@@ -55,6 +55,7 @@ export default (provider: any, options: Options) => {
       totalSupply: call(contracts.LST.methods.totalSupply)
     },
     LSTETHPool: {
+      HEART_BEAT_START_TIME: call(contracts.LSTETHPool.methods.HEART_BEAT_START_TIME),
       claim: send(contracts.LSTETHPool.methods.claim),
       currentEpoch: call(contracts.LSTETHPool.methods.currentEpoch),
       epochEndTimeFromTimestamp: call(contracts.LSTETHPool.methods.epochEndTimeFromTimestamp),
@@ -63,7 +64,7 @@ export default (provider: any, options: Options) => {
       rewardRate: call(contracts.LSTETHPool.methods.rewardRate),
       stake: send(contracts.LSTETHPool.methods.stake),
       totalSupply: call(contracts.LSTETHPool.methods.totalSupply),
-      unstake: send(contracts.LSTETHPool.methods.unstake)
+      unstake: send(contracts.LSTETHPool.methods.unstake),
     },
     LSTWETHUNIV2: {
       approve: send(contracts.LSTWETHUNIV2.methods.approve),
