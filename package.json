@@ -40,7 +40,8 @@
     "prepare-release": "run-s reset test doc:html version doc:publish",
     "prepare-release-cov": "run-s reset test cov:check doc:html version doc:publish",
     "prepare-release:no-reset": "run-s doc:html version doc:publish",
-    "release": "npm run prepare-release:no-reset && git push --follow-tags origin main && npm publish"
+    "prepare-release:no-test": "run-s reset doc:html version doc:publish",
+    "release": "npm run prepare-release:no-test && git push --follow-tags origin main && npm publish"
   },
   "scripts-info": {
     "info": "Display information about the package scripts",
