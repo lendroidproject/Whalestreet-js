@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/lendroidproject/Whalestreet-js/compare/v1.1.4...v1.2.0) (2020-12-09)
+
+
+### Features
+
+* lastEpochStaked ([a46e7c3](https://github.com/lendroidproject/Whalestreet-js/commit/a46e7c3))
+
+
+
 ### [1.1.4](https://github.com/lendroidproject/Whalestreet-js/compare/v1.1.3...v1.1.4) (2020-12-06)
 
 
