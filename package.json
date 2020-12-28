@@ -62,6 +62,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "bignumber.js": "^9.0.0",
+    "evm-chains": "^0.2.0",
     "web3": "latest"
   },
   "devDependencies": {

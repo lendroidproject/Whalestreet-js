@@ -2,11 +2,14 @@
 // tslint:disable no-object-mutation
 // tslint:disable no-expression-statement
 import Web3 from 'web3';
+import * as EvmChains from 'evm-chains';
 
 import $HRIMP from './ABIs/$HRIMP.json';
 import ERC20 from './ABIs/ERC20.json';
 import LSTETHPool from './ABIs/LSTETHPool.json';
 import LSTWETHUNIV2 from './ABIs/LSTWETHUNIV2.json';
+
+const DEFAULT_REFRESH = 5 * 1000;
 
 const call = (method: (...args: any) => any) => (...args: any) =>
   method(...args).call() as Promise<any>;
@@ -26,127 +29,222 @@ interface Options {
   readonly addresses: any;
 }
 
-export default (provider: any, options: Options) => {
-  const instance = new Web3(provider);
-  const { addresses, onEvent } = options;
-  const contracts = {
-    $HRIMP: new instance.eth.Contract($HRIMP as any, addresses.$HRIMP),
-    LST: new instance.eth.Contract(ERC20 as any, addresses.LST),
-    LSTETHPool: new instance.eth.Contract(
-      LSTETHPool as any,
-      addresses.LSTETHPool
-    ),
-    LSTWETHUNIV2: new instance.eth.Contract(
-      LSTWETHUNIV2 as any,
-      addresses.LST_WETH_UNI_V2
-    )
-  };
+interface Wallet {
+  address?: string;
+  network?: number;
+}
 
-  const methods = {
-    $HRIMP: {
-      approve: send(contracts.$HRIMP.methods.approve),
-      getAllowance: (addr: string) =>
-        call(contracts.$HRIMP.methods.allowance)(addr, addresses.LSTETHPool),
-      getBalance: call(contracts.$HRIMP.methods.balanceOf),
-      totalSupply: call(contracts.$HRIMP.methods.totalSupply)
-    },
-    LST: {
-      getBalance: call(contracts.LST.methods.balanceOf),
-      totalSupply: call(contracts.LST.methods.totalSupply)
-    },
-    LSTETHPool: {
-      EPOCH_PERIOD: call(contracts.LSTETHPool.methods.EPOCH_PERIOD),
-      HEART_BEAT_START_TIME: call(contracts.LSTETHPool.methods.HEART_BEAT_START_TIME),
-      claim: send(contracts.LSTETHPool.methods.claim),
-      currentEpoch: call(contracts.LSTETHPool.methods.currentEpoch),
-      epochEndTimeFromTimestamp: call(contracts.LSTETHPool.methods.epochEndTimeFromTimestamp),
-      getBalance: call(contracts.LSTETHPool.methods.balanceOf),
-      getEarned: call(contracts.LSTETHPool.methods.earned),
-      lastEpochStaked: call(contracts.LSTETHPool.methods.lastEpochStaked),
-      rewardRate: call(contracts.LSTETHPool.methods.rewardRate),
-      stake: send(contracts.LSTETHPool.methods.stake),
-      totalSupply: call(contracts.LSTETHPool.methods.totalSupply),
-      unstake: send(contracts.LSTETHPool.methods.unstake),
-    },
-    LSTWETHUNIV2: {
-      approve: send(contracts.LSTWETHUNIV2.methods.approve),
-      getAllowance: (addr: string) =>
-        call(contracts.LSTWETHUNIV2.methods.allowance)(
-          addr,
-          addresses.LSTETHPool
-        ),
-      getBalance: call(contracts.LSTWETHUNIV2.methods.balanceOf)
-    },
-    addresses: {
-      getName: (addr: string) =>
-        Object.keys(addresses).find(
-          k => addresses[k].toLowerCase() === addr.toLowerCase()
-        )
-    },
-    web3: {
-      getBlock: (field: string = 'timestamp') =>
-        new Promise((resolve, reject) =>
-          instance.eth
-            .getBlock('latest')
-            .then((block: any) => {
-              if (field) {
-                resolve(block[field]);
-              } else {
-                resolve(block);
-              }
-            })
-            .catch(reject)
-        ),
-      setProvider: (prov: any) => {
-        instance.setProvider(prov);
-        contracts.$HRIMP = new instance.eth.Contract(
-          $HRIMP as any,
-          addresses.$HRIMP
-        );
-        contracts.LSTWETHUNIV2 = new instance.eth.Contract(
-          LSTWETHUNIV2 as any,
-          addresses.LSTWETHUNIV2
-        );
-        contracts.LSTETHPool = new instance.eth.Contract(
-          LSTETHPool as any,
-          addresses.LSTETHPool
-        );
+class Farming {
+  private wallet: Wallet = {};
+  public web3: Web3;
+  public contracts: any;
+  public methods: any;
+  private options: any;
+  private subscriptions: any[] = [];
+  private timers: NodeJS.Timeout[] = [];
+
+  constructor(provider: any, options: Options) {
+    this.web3 = new Web3(provider);
+    this.options = options;
+    this.init(provider);
+  }
+
+  get addresses() {
+    return this.options.addresses;
+  }
+
+  get onEvent() {
+    return this.options.onEvent;
+  }
+
+  public setProvider(provider: any, addresses?: any) {
+    if (addresses) this.options.addresses = addresses;
+    this.init(provider);
+  }
+
+  public onDisconnect() {
+    this.web3.givenProvider.disconnect && this.web3.givenProvider.disconnect();
+    this.reset();
+  }
+
+  private reset() {
+    this.subscriptions.forEach(subscription => {
+      if (subscription.unsubscribe) {
+        subscription.unsubscribe();
+      } else if (subscription.deleteProperty) {
+        subscription.deleteProperty();
       }
+    });
+    this.timers.forEach(timer => clearInterval(timer));
+  }
+
+  private async initWallet(refresh: boolean = false) {
+    let status = 0; // No updatse
+    const chainId = await this.web3.eth.getChainId();
+    const { networkId: network } = await EvmChains.getChain(chainId);
+    const [address] = await this.web3.eth.getAccounts();
+    if (this.wallet.network && this.wallet.network !== network) {
+      status = 1;
+    } else if (this.wallet.address !== address) {
+      status = 2;
     }
-  };
+    this.wallet.network = network;
+    this.wallet.address = address;
 
-  contracts.$HRIMP.events
-    .allEvents(
-      {
-        // ...
-      },
-      // tslint:disable-next-line: no-console
-      console.info
-    )
-    .on('data', onEvent);
-  contracts.LSTWETHUNIV2.events
-    .allEvents(
-      {
-        // ...
-      },
-      // tslint:disable-next-line: no-console
-      console.info
-    )
-    .on('data', onEvent);
-  contracts.LSTETHPool.events
-    .allEvents(
-      {
-        // ...
-      },
-      // tslint:disable-next-line: no-console
-      console.info
-    )
-    .on('data', onEvent);
+    if (refresh || status > 0) {
+      this.onEvent({
+        event: 'WALLET',
+        status,
+        data: this.wallet
+      });
+    }
+  }
 
-  return {
-    addresses,
-    contracts,
-    methods,
-    web3: instance
-  };
-};
+  private connect() {
+    this.initWallet(true);
+  }
+
+  private disconnect() {
+    this.reset();
+    this.onEvent({
+      event: 'WALLET',
+      status: 3,
+      data: this.wallet
+    });
+  }
+
+  private async init(provider: any) {
+    const { addresses, onEvent } = this.options;
+    if (provider) {
+      this.web3 = new Web3(provider);
+      this.reset();
+    }
+
+    this.contracts = {
+      $HRIMP: new this.web3.eth.Contract($HRIMP as any, addresses.$HRIMP),
+      LST: new this.web3.eth.Contract(ERC20 as any, addresses.LST),
+      LSTETHPool: new this.web3.eth.Contract(
+        LSTETHPool as any,
+        addresses.LSTETHPool
+      ),
+      LSTWETHUNIV2: new this.web3.eth.Contract(
+        LSTWETHUNIV2 as any,
+        addresses.LST_WETH_UNI_V2
+      )
+    };
+
+    this.subscriptions = [
+      this.contracts.$HRIMP.events
+        .allEvents(
+          {
+            // ...
+          },
+          // tslint:disable-next-line: no-console
+          console.info
+        )
+        .on('data', onEvent),
+      this.contracts.LSTWETHUNIV2.events
+        .allEvents(
+          {
+            // ...
+          },
+          // tslint:disable-next-line: no-console
+          console.info
+        )
+        .on('data', onEvent),
+      this.contracts.LSTETHPool.events
+        .allEvents(
+          {
+            // ...
+          },
+          // tslint:disable-next-line: no-console
+          console.info
+        )
+        .on('data', onEvent),
+      provider.on && provider.on('accountsChanged', () => this.initWallet()),
+      provider.on && provider.on('networkChanged', () => this.initWallet()),
+      provider.on && provider.on('connect', () => this.connect()),
+      provider.on && provider.on('disconnect', () => this.disconnect())
+    ].filter(item => !!item);
+
+    if (!provider.on) {
+      this.timers = [
+        setInterval(
+          () => this.initWallet(),
+          this.options.interval || DEFAULT_REFRESH
+        )
+      ];
+    }
+
+    this.methods = {
+      $HRIMP: {
+        approve: send(this.contracts.$HRIMP.methods.approve),
+        getAllowance: (addr: string) =>
+          call(this.contracts.$HRIMP.methods.allowance)(
+            addr,
+            addresses.LSTETHPool
+          ),
+        getBalance: call(this.contracts.$HRIMP.methods.balanceOf),
+        totalSupply: call(this.contracts.$HRIMP.methods.totalSupply)
+      },
+      LST: {
+        getBalance: call(this.contracts.LST.methods.balanceOf),
+        totalSupply: call(this.contracts.LST.methods.totalSupply)
+      },
+      LSTETHPool: {
+        EPOCH_PERIOD: call(this.contracts.LSTETHPool.methods.EPOCH_PERIOD),
+        HEART_BEAT_START_TIME: call(
+          this.contracts.LSTETHPool.methods.HEART_BEAT_START_TIME
+        ),
+        claim: send(this.contracts.LSTETHPool.methods.claim),
+        currentEpoch: call(this.contracts.LSTETHPool.methods.currentEpoch),
+        epochEndTimeFromTimestamp: call(
+          this.contracts.LSTETHPool.methods.epochEndTimeFromTimestamp
+        ),
+        getBalance: call(this.contracts.LSTETHPool.methods.balanceOf),
+        getEarned: call(this.contracts.LSTETHPool.methods.earned),
+        lastEpochStaked: call(
+          this.contracts.LSTETHPool.methods.lastEpochStaked
+        ),
+        rewardRate: call(this.contracts.LSTETHPool.methods.rewardRate),
+        stake: send(this.contracts.LSTETHPool.methods.stake),
+        totalSupply: call(this.contracts.LSTETHPool.methods.totalSupply),
+        unstake: send(this.contracts.LSTETHPool.methods.unstake)
+      },
+      LSTWETHUNIV2: {
+        approve: send(this.contracts.LSTWETHUNIV2.methods.approve),
+        getAllowance: (addr: string) =>
+          call(this.contracts.LSTWETHUNIV2.methods.allowance)(
+            addr,
+            addresses.LSTETHPool
+          ),
+        getBalance: call(this.contracts.LSTWETHUNIV2.methods.balanceOf)
+      },
+      addresses: {
+        getName: (addr: string) =>
+          Object.keys(addresses).find(
+            k => addresses[k].toLowerCase() === addr.toLowerCase()
+          )
+      },
+      web3: {
+        getBlock: (field: string = 'timestamp') =>
+          new Promise((resolve, reject) =>
+            this.web3.eth
+              .getBlock('latest')
+              .then((block: any) => {
+                if (field) {
+                  resolve(block[field]);
+                } else {
+                  resolve(block);
+                }
+              })
+              .catch(reject)
+          )
+      }
+    };
+
+    await this.initWallet(!!provider);
+  }
+}
+
+export default Farming;
