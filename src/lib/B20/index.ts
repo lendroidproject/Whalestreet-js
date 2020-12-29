@@ -188,36 +188,41 @@ class B20 {
         contributeWei: send(
           this.contracts.ShardGenerationEvent.methods.contributeWei
         ),
-        contributors: () =>
+        contributors: (offset = 0, limit = 14) =>
           new Promise((resolve, reject) => {
             Promise.all(
-              new Array(1000)
-                .fill(0)
-                .map((_: any, idx: number) =>
-                  call(
-                    this.contracts.ShardGenerationEvent.methods.contributors
-                  )(idx)
-                )
+              new Array(limit).fill(0).map(
+                (_: any, idx: number) =>
+                  new Promise((res: (value: string) => void) => {
+                    call(
+                      this.contracts.ShardGenerationEvent.methods.contributors
+                    )(idx + offset)
+                      .then((address: string) => res(address))
+                      .catch(() => res(''));
+                  })
+              )
             )
-              .then(contributors =>
+              .then((contributors: string[]) =>
                 Promise.all(
-                  contributors.map(
-                    (address: string) =>
-                      new Promise((res, rej) => {
-                        call(
-                          this.contracts.ShardGenerationEvent.methods
-                            .contributions
-                        )(address)
-                          .then(contributorInfo =>
-                            res({
-                              address,
-                              hasWithdrawn: contributorInfo.hasWithdrawn,
-                              weiContributed: contributorInfo.weiContributed
-                            })
-                          )
-                          .catch(rej);
-                      })
-                  )
+                  contributors
+                    .filter(item => !!item)
+                    .map(
+                      (address: string) =>
+                        new Promise((res, rej) => {
+                          call(
+                            this.contracts.ShardGenerationEvent.methods
+                              .contributions
+                          )(address)
+                            .then(contributorInfo =>
+                              res({
+                                address,
+                                hasWithdrawn: contributorInfo.hasWithdrawn,
+                                weiContributed: contributorInfo.weiContributed
+                              })
+                            )
+                            .catch(rej);
+                        })
+                    )
                 )
                   .then(resolve)
                   .catch(reject)
@@ -245,25 +250,27 @@ class B20 {
         name: call(this.contracts.ShardToken.methods.name)
       },
       Vault: {
-        assets: () =>
+        assets: (offset = 0, limit = 20) =>
           new Promise((resolve, reject) => {
             call(this.contracts.Vault.methods.totalAssets)()
               .then(totalAssets =>
                 Promise.all(
-                  new Array(Number(totalAssets)).fill(0).map(
-                    (_: any, idx: number) =>
-                      new Promise((res, rej) => {
-                        call(this.contracts.Vault.methods.assets)(idx)
-                          .then(asset =>
-                            res({
-                              category: asset.category,
-                              tokenAddress: asset.tokenAddress,
-                              tokenId: asset.tokenId
-                            })
-                          )
-                          .catch(rej);
-                      })
-                  )
+                  new Array(Number(Math.min(totalAssets - offset, limit)))
+                    .fill(0)
+                    .map(
+                      (_: any, idx: number) =>
+                        new Promise((res, rej) => {
+                          call(this.contracts.Vault.methods.assets)(idx)
+                            .then(asset =>
+                              res({
+                                category: asset.category,
+                                tokenAddress: asset.tokenAddress,
+                                tokenId: asset.tokenId
+                              })
+                            )
+                            .catch(rej);
+                        })
+                    )
                 )
                   .then(resolve)
                   .catch(reject)
