@@ -238,6 +238,9 @@ class B20 {
         totalCapWeiAmount: call(
           this.contracts.ShardGenerationEvent.methods.totalCapInWei
         ),
+        totalContributors: call(
+          this.contracts.ShardGenerationEvent.methods.totalContributors
+        ),
         totalWeiContributed: call(
           this.contracts.ShardGenerationEvent.methods.totalWeiContributed
         )
