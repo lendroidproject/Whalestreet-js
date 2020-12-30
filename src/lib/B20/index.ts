@@ -279,7 +279,8 @@ class B20 {
                   .catch(reject)
               )
               .catch(reject);
-          })
+          }),
+        totalAssets: call(this.contracts.Vault.methods.totalAssets)
       },
       web3: {
         getBlock: (field: string = 'timestamp') =>
