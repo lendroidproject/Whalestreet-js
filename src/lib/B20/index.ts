@@ -188,6 +188,9 @@ class B20 {
         contributeWei: send(
           this.contracts.ShardGenerationEvent.methods.contributeWei
         ),
+        contributions: call(
+          this.contracts.ShardGenerationEvent.methods.contributions
+        ),
         contributors: (offset = 0, limit = 14) =>
           new Promise((resolve, reject) => {
             Promise.all(
