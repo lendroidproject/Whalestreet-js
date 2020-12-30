@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.3](https://github.com/lendroidproject/Whalestreet-js/compare/v1.3.2...v1.3.3) (2020-12-30)
+
+
+### Bug Fixes
+
+* export contributions ([8d71b4d](https://github.com/lendroidproject/Whalestreet-js/commit/8d71b4d))
+* total assets ([77f31c2](https://github.com/lendroidproject/Whalestreet-js/commit/77f31c2))
+
+
+
 ### [1.3.2](https://github.com/lendroidproject/Whalestreet-js/compare/v1.3.1...v1.3.2) (2020-12-30)
 
 
