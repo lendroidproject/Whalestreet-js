@@ -4,8 +4,9 @@
 import * as EvmChains from 'evm-chains';
 import Web3 from 'web3';
 
-import ShardGenerationEvent from './ABIs/ShardGenerationEvent.json';
-import ShardToken from './ABIs/ShardToken.json';
+import Market from './ABIs/Market.json';
+import Token0 from './ABIs/Token0.json';
+import Token1 from './ABIs/Token1.json';
 import Vault from './ABIs/Vault.json';
 
 const DEFAULT_REFRESH = 5 * 1000;
@@ -126,19 +127,14 @@ class B20 {
     }
 
     this.contracts = {
-      ShardGenerationEvent: new this.web3.eth.Contract(
-        ShardGenerationEvent as any,
-        addresses.ShardGenerationEvent
-      ),
-      ShardToken: new this.web3.eth.Contract(
-        ShardToken as any,
-        addresses.ShardToken
-      ),
+      Market: new this.web3.eth.Contract(Market as any, addresses.Market),
+      Token0: new this.web3.eth.Contract(Token0 as any, addresses.Token0),
+      Token1: new this.web3.eth.Contract(Token1 as any, addresses.Token1),
       Vault: new this.web3.eth.Contract(Vault as any, addresses.Vault)
     };
 
     this.subscriptions = [
-      this.contracts.ShardToken.events
+      this.contracts.Token0.events
         .allEvents(
           {
             // ...
@@ -147,7 +143,16 @@ class B20 {
           console.info
         )
         .on('data', onEvent),
-      this.contracts.ShardGenerationEvent.events
+      this.contracts.Token1.events
+        .allEvents(
+          {
+            // ...
+          },
+          // tslint:disable-next-line: no-console
+          console.info
+        )
+        .on('data', onEvent),
+      this.contracts.Market.events
         .allEvents(
           {
             // ...
@@ -181,25 +186,17 @@ class B20 {
     }
 
     this.methods = {
-      ShardGenerationEvent: {
-        claimShards: send(
-          this.contracts.ShardGenerationEvent.methods.claimShards
-        ),
-        contributeWei: send(
-          this.contracts.ShardGenerationEvent.methods.contributeWei
-        ),
-        contributions: call(
-          this.contracts.ShardGenerationEvent.methods.contributions
-        ),
+      Market: {
+        claimShards: send(this.contracts.Market.methods.claimShards),
+        contributeWei: send(this.contracts.Market.methods.pay),
+        contributions: call(this.contracts.Market.methods.payments),
         contributors: (offset = 0, limit = 14) =>
           new Promise((resolve, reject) => {
             Promise.all(
               new Array(limit).fill(0).map(
                 (_: any, idx: number) =>
                   new Promise((res: (value: string) => void) => {
-                    call(
-                      this.contracts.ShardGenerationEvent.methods.contributors
-                    )(idx + offset)
+                    call(this.contracts.Market.methods.buyers)(idx + offset)
                       .then((address: string) => res(address))
                       .catch(() => res(''));
                   })
@@ -212,15 +209,12 @@ class B20 {
                     .map(
                       (address: string) =>
                         new Promise((res, rej) => {
-                          call(
-                            this.contracts.ShardGenerationEvent.methods
-                              .contributions
-                          )(address)
+                          call(this.contracts.Market.methods.payments)(address)
                             .then(contributorInfo =>
                               res({
                                 address,
-                                hasWithdrawn: contributorInfo.hasWithdrawn,
-                                weiContributed: contributorInfo.weiContributed
+                                hasWithdrawn: contributorInfo.token0Withdrawn,
+                                weiContributed: contributorInfo.token1Amount
                               })
                             )
                             .catch(rej);
@@ -232,40 +226,43 @@ class B20 {
               )
               .catch(reject);
           }),
-        endTimestamp: call(
-          this.contracts.ShardGenerationEvent.methods.endTimestamp
-        ),
-        shardPerWeiContributed: call(
-          this.contracts.ShardGenerationEvent.methods.shardPerWeiContributed
-        ),
-        totalCapWeiAmount: call(
-          this.contracts.ShardGenerationEvent.methods.totalCapInWei
-        ),
-        totalContributors: call(
-          this.contracts.ShardGenerationEvent.methods.totalContributors
-        ),
-        totalWeiContributed: call(
-          this.contracts.ShardGenerationEvent.methods.totalWeiContributed
-        )
+        marketEnd: call(this.contracts.Market.methods.marketEnd),
+        totaltoken1Paid: call(this.contracts.Market.methods.totaltoken1Paid),
+        totalCap: call(this.contracts.Market.methods.totalCap),
+        totalBuyers: call(this.contracts.Market.methods.totalBuyers),
+        token0PerToken1: call(this.contracts.Market.methods.token0PerToken1)
       },
-      ShardToken: {
+      Token0: {
         balanceOf: () =>
-          call(this.contracts.ShardToken.methods.balanceOf)(
-            this.addresses.ShardGenerationEvent
+          call(this.contracts.Token0.methods.balanceOf)(this.addresses.Market),
+        name: call(this.contracts.Token0.methods.name)
+      },
+      Token1: {
+        approve: (amount: string, ...args: any[]) =>
+          send(this.contracts.Token1.methods.approve)(
+            this.addresses.Market,
+            amount,
+            ...args
           ),
-        name: call(this.contracts.ShardToken.methods.name)
+        getAllowance: (addr: string) =>
+          call(this.contracts.Token1.methods.allowance)(
+            addr,
+            this.addresses.Market
+          ),
+        balanceOf: call(this.contracts.Token1.methods.balanceOf),
+        name: call(this.contracts.Token1.methods.name)
       },
       Vault: {
         assets: (offset = 0, limit = 20) =>
           new Promise((resolve, reject) => {
-            call(this.contracts.Vault.methods.totalAssets)()
+            call(this.contracts.Vault.methods.totalAssetSlots)()
               .then(totalAssets =>
                 Promise.all(
                   new Array(Number(Math.min(totalAssets - offset, limit)))
                     .fill(0)
                     .map(
                       (_: any, idx: number) =>
-                        new Promise((res, rej) => {
+                        new Promise((res) => {
                           call(this.contracts.Vault.methods.assets)(idx)
                             .then(asset =>
                               res({
@@ -274,16 +271,16 @@ class B20 {
                                 tokenId: asset.tokenId
                               })
                             )
-                            .catch(rej);
+                            .catch(() => res(null));
                         })
                     )
                 )
-                  .then(resolve)
+                  .then(assets => resolve(assets.filter(item => !!item)))
                   .catch(reject)
               )
               .catch(reject);
           }),
-        totalAssets: call(this.contracts.Vault.methods.totalAssets)
+        totalAssets: call(this.contracts.Vault.methods.totalAssetSlots)
       },
       web3: {
         getBlock: (field: string = 'timestamp') =>
