@@ -49,19 +49,6 @@
 	},
 	{
 		"inputs": [],
-		"name": "buyoutStatus",
-		"outputs": [
-			{
-				"internalType": "enum Vault.BuyoutStatus",
-				"name": "",
-				"type": "uint8"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "lockVault",
 		"outputs": [],
 		"stateMutability": "nonpayable",
@@ -69,12 +56,12 @@
 	},
 	{
 		"inputs": [],
-		"name": "mode",
+		"name": "locked",
 		"outputs": [
 			{
-				"internalType": "enum Vault.AppMode",
+				"internalType": "bool",
 				"name": "",
-				"type": "uint8"
+				"type": "bool"
 			}
 		],
 		"stateMutability": "view",
@@ -163,11 +150,6 @@
 				"internalType": "uint256[]",
 				"name": "assetIds",
 				"type": "uint256[]"
-			},
-			{
-				"internalType": "address[]",
-				"name": "newOwnerAddresses",
-				"type": "address[]"
 			}
 		],
 		"name": "safeTransferAsset",
