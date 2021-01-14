@@ -262,7 +262,7 @@ class B20 {
                     .fill(0)
                     .map(
                       (_: any, idx: number) =>
-                        new Promise((res) => {
+                        new Promise(res => {
                           call(this.contracts.Vault.methods.assets)(idx)
                             .then(asset =>
                               res({
@@ -280,7 +280,13 @@ class B20 {
               )
               .catch(reject);
           }),
-        totalAssets: call(this.contracts.Vault.methods.totalAssetSlots)
+        totalAssets: call(this.contracts.Vault.methods.totalAssetSlots),
+        safeAddAsset: send(this.contracts.Vault.methods.safeAddAsset),
+        safeTransferAsset: send(this.contracts.Vault.methods.safeTransferAsset),
+        locked: call(this.contracts.Vault.methods.locked),
+        lockVault: send(this.contracts.Vault.methods.lockVault),
+        unlockVault: send(this.contracts.Vault.methods.unlockVault),
+        transferOwnership: send(this.contracts.Vault.methods.transferOwnership)
       },
       web3: {
         getBlock: (field: string = 'timestamp') =>
