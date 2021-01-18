@@ -8,6 +8,7 @@ import Market from './ABIs/Market.json';
 import Token0 from './ABIs/Token0.json';
 import Token1 from './ABIs/Token1.json';
 import Vault from './ABIs/Vault.json';
+import NFT from './ABIs/NFT.json';
 
 const DEFAULT_REFRESH = 5 * 1000;
 
@@ -289,6 +290,13 @@ class B20 {
         unlockVault: send(this.contracts.Vault.methods.unlockVault),
         transferOwnership: send(this.contracts.Vault.methods.transferOwnership)
       },
+      NFT: (contract: any, init: boolean = false) =>
+        init
+          ? new this.web3.eth.Contract(NFT as any, contract)
+          : {
+              isApprovedForAll: call(contract.methods.isApprovedForAll), // owner, operator
+              setApprovalForAll: send(contract.methods.setApprovalForAll) // operator, approved
+            },
       web3: {
         getBlock: (field: string = 'timestamp') =>
           new Promise((resolve, reject) =>
