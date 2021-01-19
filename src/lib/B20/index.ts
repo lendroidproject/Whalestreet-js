@@ -267,7 +267,7 @@ class B20 {
                           call(this.contracts.Vault.methods.assets)(idx)
                             .then(asset =>
                               res({
-                                id: idx,
+                                id: offset + idx,
                                 category: asset.category,
                                 tokenAddress: asset.tokenAddress,
                                 tokenId: asset.tokenId
