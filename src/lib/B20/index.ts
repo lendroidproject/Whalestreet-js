@@ -254,6 +254,7 @@ class B20 {
         name: call(this.contracts.Token1.methods.name)
       },
       Vault: {
+        owner: call(this.contracts.Vault.methods.owner),
         assets: (offset = 0, limit = 20) =>
           new Promise((resolve, reject) => {
             call(this.contracts.Vault.methods.totalAssetSlots)()
@@ -264,7 +265,9 @@ class B20 {
                     .map(
                       (_: any, idx: number) =>
                         new Promise(res => {
-                          call(this.contracts.Vault.methods.assets)(offset + idx)
+                          call(this.contracts.Vault.methods.assets)(
+                            offset + idx
+                          )
                             .then(asset =>
                               res({
                                 id: offset + idx,
