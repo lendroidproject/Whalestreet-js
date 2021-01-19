@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.11](https://github.com/lendroidproject/Whalestreet-js/compare/v1.3.10...v1.3.11) (2021-01-19)
+
+
+
 ### [1.3.10](https://github.com/lendroidproject/Whalestreet-js/compare/v1.3.9...v1.3.10) (2021-01-19)
 
 
