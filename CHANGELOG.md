@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/lendroidproject/Whalestreet-js/compare/v1.3.11...v1.4.0) (2021-01-19)
+
+
+### Features
+
+* createMarket ([7d96a40](https://github.com/lendroidproject/Whalestreet-js/commit/7d96a40))
+
+
+
 ### [1.3.11](https://github.com/lendroidproject/Whalestreet-js/compare/v1.3.10...v1.3.11) (2021-01-19)
 
 
