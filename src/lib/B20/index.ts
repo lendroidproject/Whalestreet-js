@@ -264,7 +264,7 @@ class B20 {
                     .map(
                       (_: any, idx: number) =>
                         new Promise(res => {
-                          call(this.contracts.Vault.methods.assets)(idx)
+                          call(this.contracts.Vault.methods.assets)(offset + idx)
                             .then(asset =>
                               res({
                                 id: offset + idx,
