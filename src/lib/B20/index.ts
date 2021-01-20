@@ -172,7 +172,7 @@ class B20 {
         )
         .on('data', onEvent),
       provider.on && provider.on('accountsChanged', () => this.initWallet()),
-      provider.on && provider.on('networkChanged', () => this.initWallet()),
+      provider.on && provider.on('chainChanged', () => this.initWallet()),
       provider.on && provider.on('connect', () => this.connect()),
       provider.on && provider.on('disconnect', () => this.disconnect())
     ].filter(item => !!item);
