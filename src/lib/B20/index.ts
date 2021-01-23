@@ -214,13 +214,14 @@ class B20 {
                       (address: string) =>
                         new Promise((res, rej) => {
                           call(this.contracts.Market.methods.payments)(address)
-                            .then(contributorInfo =>
+                            .then(token1Amount => {
+                              console.log(token1Amount);
                               res({
                                 address,
-                                hasWithdrawn: contributorInfo.token0Withdrawn,
-                                weiContributed: contributorInfo.token1Amount
-                              })
-                            )
+                                hasWithdrawn: 0,
+                                token1Amount
+                              });
+                            })
                             .catch(rej);
                         })
                     )
@@ -230,11 +231,10 @@ class B20 {
               )
               .catch(reject);
           }),
-        marketEnd: call(this.contracts.Market.methods.marketEnd),
         totaltoken1Paid: call(this.contracts.Market.methods.totaltoken1Paid),
         totalCap: call(this.contracts.Market.methods.totalCap),
         totalBuyers: call(this.contracts.Market.methods.totalBuyers),
-        token0PerToken1: call(this.contracts.Market.methods.token0PerToken1)
+        token1PerToken0: call(this.contracts.Market.methods.token1PerToken0)
       },
       Token0: {
         balanceOf: () =>

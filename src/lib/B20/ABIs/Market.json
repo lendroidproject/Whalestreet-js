@@ -38,44 +38,6 @@
 		"type": "event"
 	},
 	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "beneficiary",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "Token0Withdrawn",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "beneficiary",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "Token1Withdrawn",
-		"type": "event"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "uint256",
@@ -92,19 +54,6 @@
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "individualCapAmount",
-				"type": "uint256"
-			}
-		],
-		"name": "changeIndividualCap",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -132,9 +81,9 @@
 				"type": "address"
 			},
 			{
-				"internalType": "uint256[5]",
+				"internalType": "uint256[3]",
 				"name": "uint256Values",
-				"type": "uint256[5]"
+				"type": "uint256[3]"
 			}
 		],
 		"name": "createMarket",
@@ -157,19 +106,6 @@
 	},
 	{
 		"inputs": [],
-		"name": "individualCap",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "marketClosed",
 		"outputs": [
 			{
@@ -183,12 +119,12 @@
 	},
 	{
 		"inputs": [],
-		"name": "marketEnd",
+		"name": "marketOpen",
 		"outputs": [
 			{
-				"internalType": "uint256",
+				"internalType": "bool",
 				"name": "",
-				"type": "uint256"
+				"type": "bool"
 			}
 		],
 		"stateMutability": "view",
@@ -212,20 +148,7 @@
 		"name": "marketStatus",
 		"outputs": [
 			{
-				"internalType": "enum Market.MarketStatus",
-				"name": "",
-				"type": "uint8"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "mode",
-		"outputs": [
-			{
-				"internalType": "enum Market.AppMode",
+				"internalType": "enum SimpleMarket.MarketStatus",
 				"name": "",
 				"type": "uint8"
 			}
@@ -271,13 +194,8 @@
 		"outputs": [
 			{
 				"internalType": "uint256",
-				"name": "token1Amount",
+				"name": "",
 				"type": "uint256"
-			},
-			{
-				"internalType": "bool",
-				"name": "token0Withdrawn",
-				"type": "bool"
 			}
 		],
 		"stateMutability": "view",
@@ -305,19 +223,6 @@
 	},
 	{
 		"inputs": [],
-		"name": "token0PerToken1",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "token1",
 		"outputs": [
 			{
@@ -331,12 +236,12 @@
 	},
 	{
 		"inputs": [],
-		"name": "token1Withdrawn",
+		"name": "token1PerToken0",
 		"outputs": [
 			{
-				"internalType": "bool",
+				"internalType": "uint256",
 				"name": "",
-				"type": "bool"
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -390,20 +295,6 @@
 			}
 		],
 		"name": "transferOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "withdrawToken0",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "withdrawToken1",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
