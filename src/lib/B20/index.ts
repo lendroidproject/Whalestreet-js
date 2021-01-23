@@ -189,6 +189,7 @@ class B20 {
     this.methods = {
       Market: {
         createMarket: send(this.contracts.Market.methods.createMarket),
+        marketStart: call(this.contracts.Market.methods.marketStart),
         marketStatus: call(this.contracts.Market.methods.marketStatus),
         marketClosed: call(this.contracts.Market.methods.marketClosed),
         contributeWei: send(this.contracts.Market.methods.pay),
