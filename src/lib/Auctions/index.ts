@@ -97,31 +97,19 @@ export default (provider: any, options: Options) => {
   };
 
   contracts.$HRIMP.events
-    .allEvents(
-      {
-        // ...
-      },
-      // tslint:disable-next-line: no-console
-      console.info
-    )
+    .allEvents({
+      // ...
+    })
     .on('data', onEvent);
   contracts.AuctionRegistry.events
-    .allEvents(
-      {
-        // ...
-      },
-      // tslint:disable-next-line: no-console
-      console.info
-    )
+    .allEvents({
+      // ...
+    })
     .on('data', onEvent);
   contracts.WhaleSwap.events
-    .allEvents(
-      {
-        // ...
-      },
-      // tslint:disable-next-line: no-console
-      console.info
-    )
+    .allEvents({
+      // ...
+    })
     .on('data', onEvent);
 
   return {

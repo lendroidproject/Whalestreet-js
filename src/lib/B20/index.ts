@@ -136,40 +136,24 @@ class B20 {
 
     this.subscriptions = [
       this.contracts.Token0.events
-        .allEvents(
-          {
-            // ...
-          },
-          // tslint:disable-next-line: no-console
-          console.info
-        )
+        .allEvents({
+          // ...
+        })
         .on('data', onEvent),
       this.contracts.Token1.events
-        .allEvents(
-          {
-            // ...
-          },
-          // tslint:disable-next-line: no-console
-          console.info
-        )
+        .allEvents({
+          // ...
+        })
         .on('data', onEvent),
       this.contracts.Market.events
-        .allEvents(
-          {
-            // ...
-          },
-          // tslint:disable-next-line: no-console
-          console.info
-        )
+        .allEvents({
+          // ...
+        })
         .on('data', onEvent),
       this.contracts.Vault.events
-        .allEvents(
-          {
-            // ...
-          },
-          // tslint:disable-next-line: no-console
-          console.info
-        )
+        .allEvents({
+          // ...
+        })
         .on('data', onEvent),
       provider.on && provider.on('accountsChanged', () => this.initWallet()),
       provider.on && provider.on('chainChanged', () => this.initWallet()),
@@ -214,7 +198,6 @@ class B20 {
                         new Promise((res, rej) => {
                           call(this.contracts.Market.methods.payments)(address)
                             .then(token1Amount => {
-                              console.log(token1Amount);
                               res({
                                 address,
                                 hasWithdrawn: 0,
