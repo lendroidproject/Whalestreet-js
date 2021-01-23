@@ -191,9 +191,7 @@ class B20 {
         createMarket: send(this.contracts.Market.methods.createMarket),
         marketStatus: call(this.contracts.Market.methods.marketStatus),
         marketClosed: call(this.contracts.Market.methods.marketClosed),
-        claimShards: send(this.contracts.Market.methods.claimShards),
         contributeWei: send(this.contracts.Market.methods.pay),
-        contributions: call(this.contracts.Market.methods.payments),
         contributors: (offset = 0, limit = 14) =>
           new Promise((resolve, reject) => {
             Promise.all(
