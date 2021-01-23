@@ -238,7 +238,8 @@ class B20 {
       Token0: {
         balanceOf: () =>
           call(this.contracts.Token0.methods.balanceOf)(this.addresses.Market),
-        name: call(this.contracts.Token0.methods.name)
+        name: call(this.contracts.Token0.methods.name),
+        symbol: call(this.contracts.Token0.methods.symbol)
       },
       Token1: {
         approve: (amount: string, ...args: any[]) =>
@@ -253,7 +254,8 @@ class B20 {
             this.addresses.Market
           ),
         balanceOf: call(this.contracts.Token1.methods.balanceOf),
-        name: call(this.contracts.Token1.methods.name)
+        name: call(this.contracts.Token1.methods.name),
+        symbol: call(this.contracts.Token1.methods.symbol)
       },
       Vault: {
         owner: call(this.contracts.Vault.methods.owner),
