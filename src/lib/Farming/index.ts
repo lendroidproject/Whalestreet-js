@@ -78,7 +78,7 @@ class Farming {
   }
 
   private async initWallet(refresh: boolean = false) {
-    let status = 0; // No updatse
+    let status = 0; // No updates
     const chainId = await this.web3.eth.getChainId();
     const { networkId: network } = await EvmChains.getChain(chainId);
     const [address] = await this.web3.eth.getAccounts();
