@@ -63,7 +63,6 @@ class Farming {
   }
 
   public onDisconnect() {
-    this.web3.givenProvider.disconnect && this.web3.givenProvider.disconnect();
     this.disconnect();
   }
 
@@ -105,6 +104,7 @@ class Farming {
   }
 
   private disconnect() {
+    this.web3.givenProvider.disconnect && this.web3.givenProvider.disconnect();
     this.reset();
     this.onEvent({
       event: 'WALLET',
