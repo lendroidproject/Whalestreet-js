@@ -64,7 +64,7 @@ class Farming {
 
   public onDisconnect() {
     this.web3.givenProvider.disconnect && this.web3.givenProvider.disconnect();
-    this.reset();
+    this.disconnect();
   }
 
   private reset() {
