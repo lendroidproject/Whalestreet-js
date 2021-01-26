@@ -82,7 +82,7 @@ class Farming {
     const chainId = await this.web3.eth.getChainId();
     const { networkId: network } = await EvmChains.getChain(chainId);
     const [address] = await this.web3.eth.getAccounts();
-    if (!address) {
+    if (this.wallet.address && !address) {
       return this.disconnect();
     } else if (this.wallet.network && this.wallet.network !== network) {
       status = 1;
