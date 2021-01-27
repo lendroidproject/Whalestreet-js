@@ -1,8 +1,8 @@
 // tslint:disable no-if-statement
 // tslint:disable no-object-mutation
 // tslint:disable no-expression-statement
-import * as EvmChains from 'evm-chains';
 import Web3 from 'web3';
+import * as EvmChains from 'evm-chains';
 
 import Market from './ABIs/Market.json';
 import Token0 from './ABIs/Token0.json';
@@ -68,11 +68,8 @@ class B20 {
   }
 
   public onDisconnect() {
-    if (this.web3.givenProvider.disconnect) {
-      this.web3.givenProvider.disconnect();
+    this.disconnect();
     }
-    this.reset();
-  }
 
   private reset() {
     this.subscriptions.forEach((subscription: any) => {
@@ -86,11 +83,13 @@ class B20 {
   }
 
   private async initWallet(refresh: boolean = false) {
-    let status = 0; // No updatse
+    let status = 0; // No updates
     const chainId = await this.web3.eth.getChainId();
     const { networkId: network } = await EvmChains.getChain(chainId);
     const [address] = await this.web3.eth.getAccounts();
-    if (this.wallet.network && this.wallet.network !== network) {
+    if (this.wallet.address && !address) {
+      return this.disconnect();
+    } else if (this.wallet.network && this.wallet.network !== network) {
       status = 1;
     } else if (this.wallet.address !== address) {
       status = 2;
@@ -100,9 +99,9 @@ class B20 {
 
     if (refresh || status > 0) {
       this.onEvent({
-        data: this.wallet,
         event: 'WALLET',
-        status
+        status,
+        data: this.wallet
       });
     }
   }
@@ -112,11 +111,13 @@ class B20 {
   }
 
   private disconnect() {
+    this.web3.givenProvider.disconnect && this.web3.givenProvider.disconnect();
+    delete this.wallet.address;
     this.reset();
     this.onEvent({
-      data: this.wallet,
       event: 'WALLET',
-      status: 3
+      status: 3,
+      data: this.wallet
     });
   }
 

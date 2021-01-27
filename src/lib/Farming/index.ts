@@ -107,8 +107,8 @@ class Farming {
 
   private disconnect() {
     this.web3.givenProvider.disconnect && this.web3.givenProvider.disconnect();
-    this.reset();
     delete this.wallet.address;
+    this.reset();
     this.onEvent({
       event: 'WALLET',
       status: 3,
