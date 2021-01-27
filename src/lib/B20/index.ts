@@ -162,14 +162,12 @@ class B20 {
       provider.on && provider.on('disconnect', () => this.disconnect())
     ].filter(item => !!item);
 
-    if (!provider.on) {
-      this.timers = [
-        setInterval(
-          () => this.initWallet(),
-          this.options.interval || DEFAULT_REFRESH
-        )
-      ];
-    }
+    this.timers = [
+      setInterval(
+        () => this.initWallet(),
+        this.options.interval || DEFAULT_REFRESH
+      )
+    ];
 
     this.methods = {
       Market: {
