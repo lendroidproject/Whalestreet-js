@@ -69,7 +69,7 @@ class B20 {
 
   public onDisconnect() {
     this.disconnect();
-    }
+  }
 
   private reset() {
     this.subscriptions.forEach((subscription: any) => {
@@ -129,7 +129,8 @@ class B20 {
     }
 
     this.contracts = {
-      Market: new this.web3.eth.Contract(Market as any, addresses.Market),
+      Market1: new this.web3.eth.Contract(Market as any, addresses.Market1),
+      Market2: new this.web3.eth.Contract(Market as any, addresses.Market2),
       Token0: new this.web3.eth.Contract(Token0 as any, addresses.Token0),
       Token1: new this.web3.eth.Contract(Token1 as any, addresses.Token1),
       Vault: new this.web3.eth.Contract(Vault as any, addresses.Vault)
@@ -146,7 +147,12 @@ class B20 {
           // ...
         })
         .on('data', onEvent),
-      this.contracts.Market.events
+      this.contracts.Market1.events
+        .allEvents({
+          // ...
+        })
+        .on('data', onEvent),
+      this.contracts.Market2.events
         .allEvents({
           // ...
         })
@@ -170,19 +176,19 @@ class B20 {
     ];
 
     this.methods = {
-      Market: {
-        createMarket: send(this.contracts.Market.methods.createMarket),
-        marketStart: call(this.contracts.Market.methods.marketStart),
-        marketStatus: call(this.contracts.Market.methods.marketStatus),
-        marketClosed: call(this.contracts.Market.methods.marketClosed),
-        contributeWei: send(this.contracts.Market.methods.pay),
+      Market1: {
+        createMarket: send(this.contracts.Market1.methods.createMarket),
+        marketStart: call(this.contracts.Market1.methods.marketStart),
+        marketStatus: call(this.contracts.Market1.methods.marketStatus),
+        marketClosed: call(this.contracts.Market1.methods.marketClosed),
+        contributeWei: send(this.contracts.Market1.methods.pay),
         contributors: (offset = 0, limit = 14) =>
           new Promise((resolve, reject) => {
             Promise.all(
               new Array(limit).fill(0).map(
                 (_: any, idx: number) =>
                   new Promise((res: (value: string) => void) => {
-                    call(this.contracts.Market.methods.buyers)(idx + offset)
+                    call(this.contracts.Market1.methods.buyers)(idx + offset)
                       .then((address: string) => res(address))
                       .catch(() => res(''));
                   })
@@ -195,7 +201,7 @@ class B20 {
                     .map(
                       (address: string) =>
                         new Promise((res, rej) => {
-                          call(this.contracts.Market.methods.payments)(address)
+                          call(this.contracts.Market1.methods.payments)(address)
                             .then(token1Amount => {
                               res({
                                 address,
@@ -212,29 +218,66 @@ class B20 {
               )
               .catch(reject);
           }),
-        totaltoken1Paid: call(this.contracts.Market.methods.totaltoken1Paid),
-        totalCap: call(this.contracts.Market.methods.totalCap),
-        totalBuyers: call(this.contracts.Market.methods.totalBuyers),
-        token1PerToken0: call(this.contracts.Market.methods.token1PerToken0)
+        totaltoken1Paid: call(this.contracts.Market1.methods.totaltoken1Paid),
+        totalCap: call(this.contracts.Market1.methods.totalCap),
+        totalBuyers: call(this.contracts.Market1.methods.totalBuyers),
+        token1PerToken0: call(this.contracts.Market1.methods.token1PerToken0)
+      },
+      Market2: {
+        createMarket: send(this.contracts.Market2.methods.createMarket),
+        marketStart: call(this.contracts.Market2.methods.marketStart),
+        marketStatus: call(this.contracts.Market2.methods.marketStatus),
+        marketClosed: call(this.contracts.Market2.methods.marketClosed),
+        contributeWei: send(this.contracts.Market2.methods.pay),
+        contributors: (offset = 0, limit = 14) =>
+          new Promise((resolve, reject) => {
+            Promise.all(
+              new Array(limit).fill(0).map(
+                (_: any, idx: number) =>
+                  new Promise((res: (value: string) => void) => {
+                    call(this.contracts.Market2.methods.buyers)(idx + offset)
+                      .then((address: string) => res(address))
+                      .catch(() => res(''));
+                  })
+              )
+            )
+              .then((contributors: string[]) =>
+                Promise.all(
+                  contributors
+                    .filter(item => !!item)
+                    .map(
+                      (address: string) =>
+                        new Promise((res, rej) => {
+                          call(this.contracts.Market2.methods.payments)(address)
+                            .then(token1Amount => {
+                              res({
+                                address,
+                                hasWithdrawn: 0,
+                                token1Amount
+                              });
+                            })
+                            .catch(rej);
+                        })
+                    )
+                )
+                  .then(resolve)
+                  .catch(reject)
+              )
+              .catch(reject);
+          }),
+        totaltoken1Paid: call(this.contracts.Market2.methods.totaltoken1Paid),
+        totalCap: call(this.contracts.Market2.methods.totalCap),
+        totalBuyers: call(this.contracts.Market2.methods.totalBuyers),
+        token1PerToken0: call(this.contracts.Market2.methods.token1PerToken0)
       },
       Token0: {
-        balanceOf: () =>
-          call(this.contracts.Token0.methods.balanceOf)(this.addresses.Market),
+        balanceOf: call(this.contracts.Token0.methods.balanceOf),
         name: call(this.contracts.Token0.methods.name),
         symbol: call(this.contracts.Token0.methods.symbol)
       },
       Token1: {
-        approve: (amount: string, ...args: any[]) =>
-          send(this.contracts.Token1.methods.approve)(
-            this.addresses.Market,
-            amount,
-            ...args
-          ),
-        getAllowance: (addr: string) =>
-          call(this.contracts.Token1.methods.allowance)(
-            addr,
-            this.addresses.Market
-          ),
+        approve: send(this.contracts.Token1.methods.approve),
+        getAllowance: call(this.contracts.Token1.methods.allowance),
         balanceOf: call(this.contracts.Token1.methods.balanceOf),
         name: call(this.contracts.Token1.methods.name),
         symbol: call(this.contracts.Token1.methods.symbol)
