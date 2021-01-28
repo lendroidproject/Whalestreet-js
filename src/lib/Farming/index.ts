@@ -1,13 +1,19 @@
 // tslint:disable no-if-statement
 // tslint:disable no-object-mutation
 // tslint:disable no-expression-statement
-import Web3 from 'web3';
-import * as EvmChains from 'evm-chains';
+// tslint:disable no-this
+// tslint:disable typedef
+// tslint:disable readonly-keyword
+// tslint:disable readonly-array
+// tslint:disable no-class
+// tslint:disable no-let
+// tslint:disable no-delete
 
-import $HRIMP from './ABIs/$HRIMP.json';
+import * as EvmChains from 'evm-chains';
+import Web3 from 'web3';
 import ERC20 from './ABIs/ERC20.json';
-import LSTETHPool from './ABIs/LSTETHPool.json';
-import LSTWETHUNIV2 from './ABIs/LSTWETHUNIV2.json';
+import POOL from './ABIs/POOL.json';
+import UNIV2 from './ABIs/UNIV2.json';
 
 const DEFAULT_REFRESH = 5 * 1000;
 
@@ -35,10 +41,10 @@ interface Wallet {
 }
 
 class Farming {
-  private wallet: Wallet = {};
   public web3: Web3;
   public contracts: any;
   public methods: any;
+  private wallet: Wallet = {};
   private options: any;
   private subscriptions: any[] = [];
   private timers: NodeJS.Timeout[] = [];
@@ -58,7 +64,9 @@ class Farming {
   }
 
   public setProvider(provider: any, addresses?: any) {
-    if (addresses) this.options.addresses = addresses;
+    if (addresses) {
+      this.options.addresses = addresses;
+    }
     this.init(provider);
   }
 
@@ -94,9 +102,9 @@ class Farming {
 
     if (refresh || status > 0) {
       this.onEvent({
+        data: this.wallet,
         event: 'WALLET',
-        status,
-        data: this.wallet
+        status
       });
     }
   }
@@ -106,13 +114,15 @@ class Farming {
   }
 
   private disconnect() {
-    this.web3.givenProvider.disconnect && this.web3.givenProvider.disconnect();
+    if (this.web3.givenProvider.disconnect) {
+      this.web3.givenProvider.disconnect();
+    }
     delete this.wallet.address;
     this.reset();
     this.onEvent({
+      data: this.wallet,
       event: 'WALLET',
-      status: 3,
-      data: this.wallet
+      status: 3
     });
   }
 
@@ -124,33 +134,64 @@ class Farming {
     }
 
     this.contracts = {
-      $HRIMP: new this.web3.eth.Contract($HRIMP as any, addresses.$HRIMP),
-      LST: new this.web3.eth.Contract(ERC20 as any, addresses.LST),
-      LSTETHPool: new this.web3.eth.Contract(
-        LSTETHPool as any,
-        addresses.LSTETHPool
+      $HRIMP: new this.web3.eth.Contract(ERC20 as any, addresses.$HRIMP),
+      $HRIMP_WETH_UNIV2: new this.web3.eth.Contract(
+        UNIV2 as any,
+        addresses.$HRIMP_WETH_UNIV2
       ),
-      LSTWETHUNIV2: new this.web3.eth.Contract(
-        LSTWETHUNIV2 as any,
-        addresses.LST_WETH_UNI_V2
+      $HRIMP_WETH_UNIV2_B20_Pool: new this.web3.eth.Contract(
+        POOL as any,
+        addresses.$HRIMP_WETH_UNIV2_B20_Pool
+      ),
+      B20: new this.web3.eth.Contract(ERC20 as any, addresses.B20),
+      B20_WETH_UNIV2: new this.web3.eth.Contract(
+        UNIV2 as any,
+        addresses.B20_WETH_UNIV2
+      ),
+      B20_WETH_UNIV2_B20_Pool: new this.web3.eth.Contract(
+        POOL as any,
+        addresses.B20_WETH_UNIV2_B20_Pool
+      ),
+      B20_WETH_UNIV2_LST_Pool: new this.web3.eth.Contract(
+        POOL as any,
+        addresses.B20_WETH_UNIV2_LST_Pool
+      ),
+      LST: new this.web3.eth.Contract(ERC20 as any, addresses.LST),
+      LST_WETH_UNIV2: new this.web3.eth.Contract(
+        UNIV2 as any,
+        addresses.LST_WETH_UNIV2
+      ),
+      LST_WETH_UNIV2_$HRIMP_Pool: new this.web3.eth.Contract(
+        POOL as any,
+        addresses.LST_WETH_UNIV2_$HRIMP_Pool
+      ),
+      LST_WETH_UNIV2_B20_Pool: new this.web3.eth.Contract(
+        POOL as any,
+        addresses.LST_WETH_UNIV2_B20_Pool
       )
     };
 
     this.subscriptions = [
-      this.contracts.$HRIMP.events
-        .allEvents({
-          // ...
-        })
+      // this.contracts.B20.events.allEvents({}).on('data', onEvent),
+      this.contracts.B20_WETH_UNIV2.events.allEvents({}).on('data', onEvent),
+      this.contracts.B20_WETH_UNIV2_B20_Pool.events
+        .allEvents({})
         .on('data', onEvent),
-      this.contracts.LSTWETHUNIV2.events
-        .allEvents({
-          // ...
-        })
+      this.contracts.B20_WETH_UNIV2_LST_Pool.events
+        .allEvents({})
         .on('data', onEvent),
-      this.contracts.LSTETHPool.events
-        .allEvents({
-          // ...
-        })
+      // this.contracts.$HRIMP.events.allEvents({}).on('data', onEvent),
+      this.contracts.$HRIMP_WETH_UNIV2.events.allEvents({}).on('data', onEvent),
+      this.contracts.$HRIMP_WETH_UNIV2_B20_Pool.events
+        .allEvents({})
+        .on('data', onEvent),
+      // this.contracts.LST.events.allEvents({}).on('data', onEvent),
+      this.contracts.LST_WETH_UNIV2.events.allEvents({}).on('data', onEvent),
+      this.contracts.LST_WETH_UNIV2_$HRIMP_Pool.events
+        .allEvents({})
+        .on('data', onEvent),
+      this.contracts.LST_WETH_UNIV2_B20_Pool.events
+        .allEvents({})
         .on('data', onEvent),
       provider.on && provider.on('accountsChanged', () => this.initWallet()),
       provider.on && provider.on('chainChanged', () => this.initWallet()),
@@ -165,56 +206,58 @@ class Farming {
       )
     ];
 
+    const getERC20Methods = (contract: any) => ({
+      approve: send(contract.methods.approve),
+      getAllowance: call(contract.methods.allowance),
+      getBalance: call(contract.methods.balanceOf),
+      totalSupply: call(contract.methods.totalSupply)
+    });
+
+    const getPoolMethods = (contract: any) => ({
+      EPOCH_PERIOD: call(contract.methods.EPOCH_PERIOD),
+      HEART_BEAT_START_TIME: call(contract.methods.HEART_BEAT_START_TIME),
+      claim: send(contract.methods.claim),
+      currentEpoch: call(contract.methods.currentEpoch),
+      epochEndTimeFromTimestamp: call(
+        contract.methods.epochEndTimeFromTimestamp
+      ),
+      getBalance: call(contract.methods.balanceOf),
+      getEarned: call(contract.methods.earned),
+      lastEpochStaked: call(contract.methods.lastEpochStaked),
+      rewardRate: call(contract.methods.rewardRate),
+      stake: send(contract.methods.stake),
+      totalSupply: call(contract.methods.totalSupply),
+      unstake: send(contract.methods.unstake)
+    });
+
+    const getUniV2Methods = (contract: any) => ({
+      approve: send(contract.methods.approve),
+      getAllowance: call(contract.methods.allowance),
+      getBalance: call(contract.methods.balanceOf)
+    });
+
     this.methods = {
-      $HRIMP: {
-        approve: send(this.contracts.$HRIMP.methods.approve),
-        getAllowance: (addr: string) =>
-          call(this.contracts.$HRIMP.methods.allowance)(
-            addr,
-            addresses.LSTETHPool
-          ),
-        getBalance: call(this.contracts.$HRIMP.methods.balanceOf),
-        totalSupply: call(this.contracts.$HRIMP.methods.totalSupply)
-      },
-      LST: {
-        getBalance: call(this.contracts.LST.methods.balanceOf),
-        totalSupply: call(this.contracts.LST.methods.totalSupply)
-      },
-      LSTETHPool: {
-        EPOCH_PERIOD: call(this.contracts.LSTETHPool.methods.EPOCH_PERIOD),
-        HEART_BEAT_START_TIME: call(
-          this.contracts.LSTETHPool.methods.HEART_BEAT_START_TIME
-        ),
-        claim: send(this.contracts.LSTETHPool.methods.claim),
-        currentEpoch: call(this.contracts.LSTETHPool.methods.currentEpoch),
-        epochEndTimeFromTimestamp: call(
-          this.contracts.LSTETHPool.methods.epochEndTimeFromTimestamp
-        ),
-        getBalance: call(this.contracts.LSTETHPool.methods.balanceOf),
-        getEarned: call(this.contracts.LSTETHPool.methods.earned),
-        lastEpochStaked: call(
-          this.contracts.LSTETHPool.methods.lastEpochStaked
-        ),
-        rewardRate: call(this.contracts.LSTETHPool.methods.rewardRate),
-        stake: send(this.contracts.LSTETHPool.methods.stake),
-        totalSupply: call(this.contracts.LSTETHPool.methods.totalSupply),
-        unstake: send(this.contracts.LSTETHPool.methods.unstake)
-      },
-      LSTWETHUNIV2: {
-        approve: send(this.contracts.LSTWETHUNIV2.methods.approve),
-        getAllowance: (addr: string) =>
-          call(this.contracts.LSTWETHUNIV2.methods.allowance)(
-            addr,
-            addresses.LSTETHPool
-          ),
-        getBalance: call(this.contracts.LSTWETHUNIV2.methods.balanceOf)
-      },
-      addresses: {
-        getName: (addr: string) =>
-          Object.keys(addresses).find(
-            k => addresses[k].toLowerCase() === addr.toLowerCase()
-          )
-      },
+      $HRIMP: getERC20Methods(this.contracts.$HRIMP),
+      $HRIMP_WETH_UNIV2: getUniV2Methods(this.contracts.$HRIMP_WETH_UNIV2),
+      $HRIMP_WETH_UNIV2_B20_Pool: getPoolMethods(
+        this.contracts.$HRIMP_WETH_UNIV2_B20_Pool
+      ),
+      B20: getERC20Methods(this.contracts.B20),
+      B20_WETH_UNIV2: getUniV2Methods(this.contracts.B20_WETH_UNIV2),
+      B20_WETH_UNIV2_B20_Pool: getPoolMethods(
+        this.contracts.B20_WETH_UNIV2_B20_Pool
+      ),
+      B20_WETH_UNIV2_LST_Pool: getPoolMethods(
+        this.contracts.B20_WETH_UNIV2_LST_Pool
+      ),
+      LST: getERC20Methods(this.contracts.LST),
+      LST_WETH_UNIV2: getUniV2Methods(this.contracts.LST_WETH_UNIV2),
+      LST_WETH_UNIV2_$HRIMP_Pool: getPoolMethods(
+        this.contracts.LST_WETH_UNIV2_$HRIMP_Pool
+      ),
+      LST_WETH_UNIV2_B20_Pool: getPoolMethods(
+        this.contracts.LST_WETH_UNIV2_B20_Pool
+      ),
       web3: {
         getBlock: (field: string = 'timestamp') =>
           new Promise((resolve, reject) =>

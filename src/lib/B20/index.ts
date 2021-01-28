@@ -1,6 +1,13 @@
 // tslint:disable no-if-statement
 // tslint:disable no-object-mutation
 // tslint:disable no-expression-statement
+// tslint:disable: no-this
+// tslint:disable: typedef
+// tslint:disable: readonly-keyword
+// tslint:disable: no-class
+// tslint:disable: readonly-array
+// tslint:disable: no-let
+
 import Web3 from 'web3';
 import * as EvmChains from 'evm-chains';
 
@@ -29,13 +36,6 @@ interface Options {
   readonly onEvent?: (type: string, payload: any, error: any) => void;
   readonly addresses: any;
 }
-
-// tslint:disable: no-this
-// tslint:disable: typedef
-// tslint:disable: readonly-keyword
-// tslint:disable: no-class
-// tslint:disable: readonly-array
-// tslint:disable: no-let
 
 class B20 {
   public web3: Web3;
