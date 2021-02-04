@@ -233,7 +233,8 @@ class Farming {
     const getUniV2Methods = (contract: any) => ({
       approve: send(contract.methods.approve),
       getAllowance: call(contract.methods.allowance),
-      getBalance: call(contract.methods.balanceOf)
+      getBalance: call(contract.methods.balanceOf),
+      totalSupply: call(contract.methods.totalSupply)
     });
 
     this.methods = {
