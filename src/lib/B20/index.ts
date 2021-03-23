@@ -14,7 +14,9 @@ import * as EvmChains from 'evm-chains';
 import Market from './ABIs/Market.json';
 import Token0 from './ABIs/Token0.json';
 import Token1 from './ABIs/Token1.json';
+import Token2 from './ABIs/Token2.json';
 import Vault from './ABIs/Vault.json';
+import Buyout from './ABIs/Buyout.json';
 import NFT from './ABIs/NFT.json';
 
 const DEFAULT_REFRESH = 5 * 1000;
@@ -133,7 +135,9 @@ class B20 {
       Market2: new this.web3.eth.Contract(Market as any, addresses.Market2),
       Token0: new this.web3.eth.Contract(Token0 as any, addresses.Token0),
       Token1: new this.web3.eth.Contract(Token1 as any, addresses.Token1),
-      Vault: new this.web3.eth.Contract(Vault as any, addresses.Vault)
+      Token2: new this.web3.eth.Contract(Token2 as any, addresses.Token2),
+      Vault: new this.web3.eth.Contract(Vault as any, addresses.Vault),
+      Buyout: new this.web3.eth.Contract(Buyout as any, addresses.Buyout),
     };
 
     this.subscriptions = [
@@ -282,6 +286,13 @@ class B20 {
         name: call(this.contracts.Token1.methods.name),
         symbol: call(this.contracts.Token1.methods.symbol)
       },
+      Token2: {
+        approve: send(this.contracts.Token2.methods.approve),
+        getAllowance: call(this.contracts.Token2.methods.allowance),
+        balanceOf: call(this.contracts.Token2.methods.balanceOf),
+        name: call(this.contracts.Token2.methods.name),
+        symbol: call(this.contracts.Token2.methods.symbol)
+      },
       Vault: {
         owner: call(this.contracts.Vault.methods.owner),
         assets: (offset = 0, limit = 20) =>
@@ -321,6 +332,23 @@ class B20 {
         lockVault: send(this.contracts.Vault.methods.lockVault),
         unlockVault: send(this.contracts.Vault.methods.unlockVault),
         transferOwnership: send(this.contracts.Vault.methods.transferOwnership)
+      },
+      Buyout: {
+        EPOCH_PERIOD: call(this.contracts.Buyout.methods.EPOCH_PERIOD),
+        HEART_BEAT_START_TIME: call(this.contracts.Buyout.methods.HEART_BEAT_START_TIME),
+        epochs: call(this.contracts.Buyout.methods.epochs),
+        status: call(this.contracts.Buyout.methods.status),
+        startThreshold: call(this.contracts.Buyout.methods.startThreshold),
+        highestBidder: call(this.contracts.Buyout.methods.highestBidder),
+        highestBidValues: call(this.contracts.Buyout.methods.highestBidValues),
+        requiredToken0ToBid: call(this.contracts.Buyout.methods.requiredToken0ToBid),
+        token0Staked: call(this.contracts.Buyout.methods.token0Staked),
+        lastVetoedBidId: call(this.contracts.Buyout.methods.lastVetoedBidId),
+        currentBidId: call(this.contracts.Buyout.methods.currentBidId),
+        placeBid: send(this.contracts.Buyout.methods.placeBid),
+        veto: send(this.contracts.Buyout.methods.veto),
+        extendVeto: send(this.contracts.Buyout.methods.extendVeto),
+        withdrawStakedToken0: send(this.contracts.Buyout.methods.withdrawStakedToken0),
       },
       NFT: (contract: any, init: boolean = false) =>
         init
