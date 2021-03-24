@@ -275,6 +275,7 @@ class B20 {
         token1PerToken0: call(this.contracts.Market2.methods.token1PerToken0)
       },
       Token0: {
+        getAllowance: call(this.contracts.Token0.methods.allowance),
         balanceOf: call(this.contracts.Token0.methods.balanceOf),
         name: call(this.contracts.Token0.methods.name),
         symbol: call(this.contracts.Token0.methods.symbol)
