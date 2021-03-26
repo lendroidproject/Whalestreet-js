@@ -279,21 +279,24 @@ class B20 {
         getAllowance: call(this.contracts.Token0.methods.allowance),
         balanceOf: call(this.contracts.Token0.methods.balanceOf),
         name: call(this.contracts.Token0.methods.name),
-        symbol: call(this.contracts.Token0.methods.symbol)
+        symbol: call(this.contracts.Token0.methods.symbol),
+        totalSupply: call(this.contracts.Token0.methods.totalSupply)
       },
       Token1: {
         approve: send(this.contracts.Token1.methods.approve),
         getAllowance: call(this.contracts.Token1.methods.allowance),
         balanceOf: call(this.contracts.Token1.methods.balanceOf),
         name: call(this.contracts.Token1.methods.name),
-        symbol: call(this.contracts.Token1.methods.symbol)
+        symbol: call(this.contracts.Token1.methods.symbol),
+        totalSupply: call(this.contracts.Token1.methods.totalSupply)
       },
       Token2: {
         approve: send(this.contracts.Token2.methods.approve),
         getAllowance: call(this.contracts.Token2.methods.allowance),
         balanceOf: call(this.contracts.Token2.methods.balanceOf),
         name: call(this.contracts.Token2.methods.name),
-        symbol: call(this.contracts.Token2.methods.symbol)
+        symbol: call(this.contracts.Token2.methods.symbol),
+        totalSupply: call(this.contracts.Token2.methods.totalSupply)
       },
       Vault: {
         owner: call(this.contracts.Vault.methods.owner),
@@ -347,7 +350,9 @@ class B20 {
         token0Staked: call(this.contracts.Buyout.methods.token0Staked),
         lastVetoedBidId: call(this.contracts.Buyout.methods.lastVetoedBidId),
         currentBidId: call(this.contracts.Buyout.methods.currentBidId),
+        currentBidToken0Staked: call(this.contracts.Buyout.methods.currentBidToken0Staked),
         token2AmountRedeemable: call(this.contracts.Buyout.methods.token2AmountRedeemable),
+        stopThresholdPercent: call(this.contracts.Buyout.methods.stopThresholdPercent),
         placeBid: send(this.contracts.Buyout.methods.placeBid),
         veto: send(this.contracts.Buyout.methods.veto),
         extendVeto: send(this.contracts.Buyout.methods.extendVeto),
