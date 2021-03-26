@@ -363,6 +363,9 @@ class B20 {
         stopThresholdPercent: call(
           this.contracts.Buyout.methods.stopThresholdPercent
         ),
+        redeemToken2Amount: call(
+          this.contracts.Buyout.methods.redeemToken2Amount
+        ),
         placeBid: send(this.contracts.Buyout.methods.placeBid),
         veto: send(this.contracts.Buyout.methods.veto),
         extendVeto: send(this.contracts.Buyout.methods.extendVeto),
