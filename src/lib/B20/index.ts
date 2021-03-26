@@ -137,7 +137,7 @@ class B20 {
       Token1: new this.web3.eth.Contract(Token1 as any, addresses.Token1),
       Token2: new this.web3.eth.Contract(Token2 as any, addresses.Token2),
       Vault: new this.web3.eth.Contract(Vault as any, addresses.Vault),
-      Buyout: new this.web3.eth.Contract(Buyout as any, addresses.Buyout),
+      Buyout: new this.web3.eth.Contract(Buyout as any, addresses.Buyout)
     };
 
     this.subscriptions = [
@@ -340,23 +340,36 @@ class B20 {
       },
       Buyout: {
         EPOCH_PERIOD: call(this.contracts.Buyout.methods.EPOCH_PERIOD),
-        HEART_BEAT_START_TIME: call(this.contracts.Buyout.methods.HEART_BEAT_START_TIME),
+        HEART_BEAT_START_TIME: call(
+          this.contracts.Buyout.methods.HEART_BEAT_START_TIME
+        ),
         epochs: call(this.contracts.Buyout.methods.epochs),
         status: call(this.contracts.Buyout.methods.status),
         startThreshold: call(this.contracts.Buyout.methods.startThreshold),
         highestBidder: call(this.contracts.Buyout.methods.highestBidder),
         highestBidValues: call(this.contracts.Buyout.methods.highestBidValues),
-        requiredToken0ToBid: call(this.contracts.Buyout.methods.requiredToken0ToBid),
+        requiredToken0ToBid: call(
+          this.contracts.Buyout.methods.requiredToken0ToBid
+        ),
         token0Staked: call(this.contracts.Buyout.methods.token0Staked),
         lastVetoedBidId: call(this.contracts.Buyout.methods.lastVetoedBidId),
         currentBidId: call(this.contracts.Buyout.methods.currentBidId),
-        currentBidToken0Staked: call(this.contracts.Buyout.methods.currentBidToken0Staked),
-        token2AmountRedeemable: call(this.contracts.Buyout.methods.token2AmountRedeemable),
-        stopThresholdPercent: call(this.contracts.Buyout.methods.stopThresholdPercent),
+        currentBidToken0Staked: call(
+          this.contracts.Buyout.methods.currentBidToken0Staked
+        ),
+        token2AmountRedeemable: call(
+          this.contracts.Buyout.methods.token2AmountRedeemable
+        ),
+        stopThresholdPercent: call(
+          this.contracts.Buyout.methods.stopThresholdPercent
+        ),
         placeBid: send(this.contracts.Buyout.methods.placeBid),
         veto: send(this.contracts.Buyout.methods.veto),
         extendVeto: send(this.contracts.Buyout.methods.extendVeto),
-        withdrawStakedToken0: send(this.contracts.Buyout.methods.withdrawStakedToken0),
+        withdrawStakedToken0: send(
+          this.contracts.Buyout.methods.withdrawStakedToken0
+        ),
+        redeem: send(this.contracts.Buyout.methods.redeem)
       },
       NFT: (contract: any, init: boolean = false) =>
         init
