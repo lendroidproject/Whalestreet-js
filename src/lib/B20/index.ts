@@ -347,6 +347,7 @@ class B20 {
         token0Staked: call(this.contracts.Buyout.methods.token0Staked),
         lastVetoedBidId: call(this.contracts.Buyout.methods.lastVetoedBidId),
         currentBidId: call(this.contracts.Buyout.methods.currentBidId),
+        token2AmountRedeemable: call(this.contracts.Buyout.methods.token2AmountRedeemable),
         placeBid: send(this.contracts.Buyout.methods.placeBid),
         veto: send(this.contracts.Buyout.methods.veto),
         extendVeto: send(this.contracts.Buyout.methods.extendVeto),
