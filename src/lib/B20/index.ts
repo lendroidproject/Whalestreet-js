@@ -357,6 +357,7 @@ class B20 {
         currentBidToken0Staked: call(
           this.contracts.Buyout.methods.currentBidToken0Staked
         ),
+        currentEpoch: call(this.contracts.Buyout.methods.currentEpoch),
         token2AmountRedeemable: call(
           this.contracts.Buyout.methods.token2AmountRedeemable
         ),
