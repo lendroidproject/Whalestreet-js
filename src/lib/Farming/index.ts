@@ -227,7 +227,8 @@ class Farming {
       rewardRate: call(contract.methods.rewardRate),
       stake: send(contract.methods.stake),
       totalSupply: call(contract.methods.totalSupply),
-      unstake: send(contract.methods.unstake)
+      unstake: send(contract.methods.unstake),
+      unstakeAndClaim: send(contract.methods.unstakeAndClaim),
     });
 
     const getUniV2Methods = (contract: any) => ({
