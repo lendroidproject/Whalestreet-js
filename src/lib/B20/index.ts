@@ -137,6 +137,7 @@ class B20 {
       Token1: new this.web3.eth.Contract(Token1 as any, addresses.Token1),
       Token2: new this.web3.eth.Contract(Token2 as any, addresses.Token2),
       Vault: new this.web3.eth.Contract(Vault as any, addresses.Vault),
+      Vault2: new this.web3.eth.Contract(Vault as any, addresses.Vault2),
       Buyout: new this.web3.eth.Contract(Buyout as any, addresses.Buyout)
     };
 
@@ -162,6 +163,11 @@ class B20 {
         })
         .on('data', onEvent),
       this.contracts.Vault.events
+        .allEvents({
+          // ...
+        })
+        .on('data', onEvent),
+      this.contracts.Vault2.events
         .allEvents({
           // ...
         })
@@ -337,6 +343,46 @@ class B20 {
         lockVault: send(this.contracts.Vault.methods.lockVault),
         unlockVault: send(this.contracts.Vault.methods.unlockVault),
         transferOwnership: send(this.contracts.Vault.methods.transferOwnership)
+      },
+      Vault2: {
+        owner: call(this.contracts.Vault2.methods.owner),
+        assets: (offset = 0, limit = 20) =>
+          new Promise((resolve, reject) => {
+            call(this.contracts.Vault2.methods.totalAssetSlots)()
+              .then(totalAssets =>
+                Promise.all(
+                  new Array(Number(Math.min(totalAssets - offset, limit)))
+                    .fill(0)
+                    .map(
+                      (_: any, idx: number) =>
+                        new Promise(res => {
+                          call(this.contracts.Vault2.methods.assets)(
+                            offset + idx
+                          )
+                            .then(asset =>
+                              res({
+                                id: offset + idx,
+                                category: asset.category,
+                                tokenAddress: asset.tokenAddress,
+                                tokenId: asset.tokenId
+                              })
+                            )
+                            .catch(() => res(null));
+                        })
+                    )
+                )
+                  .then(assets => resolve(assets.filter(item => !!item)))
+                  .catch(reject)
+              )
+              .catch(reject);
+          }),
+        totalAssets: call(this.contracts.Vault2.methods.totalAssetSlots),
+        safeAddAsset: send(this.contracts.Vault2.methods.safeAddAsset),
+        safeTransferAsset: send(this.contracts.Vault2.methods.safeTransferAsset),
+        locked: call(this.contracts.Vault2.methods.locked),
+        lockVault: send(this.contracts.Vault2.methods.lockVault),
+        unlockVault: send(this.contracts.Vault2.methods.unlockVault),
+        transferOwnership: send(this.contracts.Vault2.methods.transferOwnership)
       },
       Buyout: {
         EPOCH_PERIOD: call(this.contracts.Buyout.methods.EPOCH_PERIOD),
