@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/lendroidproject/Whalestreet-js/compare/v1.7.5...v1.8.0) (2021-05-10)
+
+
+### Features
+
+* Vault2 ([a65a9f9](https://github.com/lendroidproject/Whalestreet-js/commit/a65a9f9))
+
+
+
 ### [1.7.5](https://github.com/lendroidproject/Whalestreet-js/compare/v1.7.4...v1.7.5) (2021-04-30)
 
 
