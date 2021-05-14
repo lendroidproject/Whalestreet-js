@@ -55,7 +55,7 @@ export default (provider: any, options: Options) => {
         contracts.AuctionRegistry.methods.epochEndTimeFromTimestamp
       ),
       purchase: send(contracts.AuctionRegistry.methods.purchase),
-      purchases: call(contracts.AuctionRegistry.methods.purchases),
+      purchases: call(contracts.AuctionRegistry.methods.Ys),
       totalPurchases: call(contracts.AuctionRegistry.methods.totalPurchases)
     },
     WhaleSwap: {
