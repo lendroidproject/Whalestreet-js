@@ -5,6 +5,7 @@ import Web3 from 'web3';
 
 import $HRIMP from './ABIs/$HRIMP.json';
 import AuctionRegistry from './ABIs/AuctionRegistry.json';
+import AuctionCurve from './ABIs/AuctionCurve.json';
 import WhaleSwap from './ABIs/WhaleSwap.json';
 
 const call = (method: (...args: any) => any) => (...args: any) =>
@@ -49,11 +50,41 @@ export default (provider: any, options: Options) => {
       totalSupply: call(contracts.$HRIMP.methods.totalSupply)
     },
     AuctionRegistry: {
-      currentEpoch: call(contracts.AuctionRegistry.methods.currentEpoch),
+      currentEpoch: () => {
+        return new Promise((resolve, reject) => {
+          contracts.AuctionRegistry.methods.auctionCurve
+            .call()
+            .then((auctionCurve: string) => {
+              const curve = new instance.eth.Contract(
+                AuctionCurve as any,
+                auctionCurve
+              );
+              curve.methods
+                .currentEpoch()
+                .then(resolve)
+                .catch(reject);
+            })
+            .catch(reject);
+        });
+      },
       currentPrice: call(contracts.AuctionRegistry.methods.currentPrice),
-      epochEndTimeFromTimestamp: call(
-        contracts.AuctionRegistry.methods.epochEndTimeFromTimestamp
-      ),
+      epochEndTimeFromTimestamp: () => {
+        return new Promise((resolve, reject) => {
+          contracts.AuctionRegistry.methods.auctionCurve
+            .call()
+            .then((auctionCurve: string) => {
+              const curve = new instance.eth.Contract(
+                AuctionCurve as any,
+                auctionCurve
+              );
+              curve.methods
+                .epochEndTimeFromTimestamp()
+                .then(resolve)
+                .catch(reject);
+            })
+            .catch(reject);
+        });
+      },
       purchase: send(contracts.AuctionRegistry.methods.purchase),
       purchases: call(contracts.AuctionRegistry.methods.defiKeys),
       totalPurchases: call(contracts.AuctionRegistry.methods.totalDefiKeys)
