@@ -62,6 +62,7 @@ export default (provider: any, options: Options) => {
               );
               curve.methods
                 .currentEpoch()
+                .call()
                 .then(resolve)
                 .catch(reject);
             })
@@ -81,6 +82,7 @@ export default (provider: any, options: Options) => {
               );
               curve.methods
                 .epochEndTimeFromTimestamp()
+                .call()
                 .then(resolve)
                 .catch(reject);
             })
