@@ -70,7 +70,7 @@ export default (provider: any, options: Options) => {
         });
       },
       currentPrice: call(contracts.AuctionRegistry.methods.currentPrice),
-      epochEndTimeFromTimestamp: () => {
+      epochEndTimeFromTimestamp: (timestamp: any) => {
         return new Promise((resolve, reject) => {
           contracts.AuctionRegistry.methods
             .auctionCurve()
@@ -81,7 +81,7 @@ export default (provider: any, options: Options) => {
                 auctionCurve
               );
               curve.methods
-                .epochEndTimeFromTimestamp()
+                .epochEndTimeFromTimestamp(timestamp)
                 .call()
                 .then(resolve)
                 .catch(reject);
