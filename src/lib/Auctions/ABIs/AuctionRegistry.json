@@ -3,12 +3,42 @@
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "rewardTokenAddress",
+				"name": "tokenAddress",
+				"type": "address"
+			}
+		],
+		"name": "escapeHatchERC20",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "purchase",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "daoTreasuryAddress",
 				"type": "address"
 			},
 			{
 				"internalType": "address",
-				"name": "probabilityDistributionAddress",
+				"name": "auctionCurveAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "purchaseTokenAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "keyMinterAddress",
 				"type": "address"
 			}
 		],
@@ -60,83 +90,116 @@
 		"type": "event"
 	},
 	{
-		"inputs": [],
-		"name": "EPOCH_PERIOD",
-		"outputs": [
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "requestId",
+				"type": "bytes32"
+			},
 			{
 				"internalType": "uint256",
-				"name": "",
+				"name": "randomness",
 				"type": "uint256"
 			}
 		],
-		"stateMutability": "view",
+		"name": "rawFulfillRandomness",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "HEART_BEAT_START_TIME",
-		"outputs": [
+		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
 			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
+				"internalType": "address",
+				"name": "auctionCurveAddress",
+				"type": "address"
 			}
 		],
-		"stateMutability": "view",
+		"name": "setAuctionCurve",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "",
+				"name": "_fee",
 				"type": "uint256"
 			}
 		],
-		"name": "Ys",
-		"outputs": [
+		"name": "setFee",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
 			{
-				"internalType": "uint256",
-				"name": "epoch",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "y",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "timestamp",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "auctionTokenAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "auctionTokenId",
-				"type": "uint256"
-			},
+				"internalType": "bytes32",
+				"name": "_keyhash",
+				"type": "bytes32"
+			}
+		],
+		"name": "setKeyHash",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
 			{
 				"internalType": "address",
-				"name": "account",
+				"name": "keyMinterAddress",
 				"type": "address"
 			}
 		],
-		"stateMutability": "view",
+		"name": "setKeyMinter",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferKeyMinterOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "currentEpoch",
+		"name": "auctionCurve",
 		"outputs": [
 			{
-				"internalType": "uint256",
+				"internalType": "contract IAuctionCurve",
 				"name": "",
-				"type": "uint256"
+				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -156,82 +219,71 @@
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "timestamp",
-				"type": "uint256"
-			}
-		],
-		"name": "epochEndTimeFromTimestamp",
+		"inputs": [],
+		"name": "daoTreasury",
 		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "pure",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "timestamp",
-				"type": "uint256"
-			}
-		],
-		"name": "epochFromTimestamp",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "pure",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "timestamp",
-				"type": "uint256"
-			}
-		],
-		"name": "epochStartTimeFromTimestamp",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "pure",
-		"type": "function"
-	},
-	{
-		"inputs": [
 			{
 				"internalType": "address",
-				"name": "tokenAddress",
+				"name": "",
 				"type": "address"
 			}
 		],
-		"name": "escapeHatchERC20",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "maxY",
-		"outputs": [
+		"inputs": [
 			{
 				"internalType": "uint256",
 				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "defiKeys",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "epoch",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "auctionTokenAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "auctionTokenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "feePercentage",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "requestId",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "uint256",
+				"name": "randomness",
 				"type": "uint256"
 			}
 		],
@@ -240,12 +292,12 @@
 	},
 	{
 		"inputs": [],
-		"name": "minY",
+		"name": "keyMinter",
 		"outputs": [
 			{
-				"internalType": "uint256",
+				"internalType": "contract IRandomMinter",
 				"name": "",
-				"type": "uint256"
+				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -284,23 +336,22 @@
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "probabilityDistribution",
-		"outputs": [
+		"inputs": [
 			{
-				"internalType": "contract IAuctionTokenProbabilityDistribution",
-				"name": "",
-				"type": "address"
+				"internalType": "uint256",
+				"name": "randomness",
+				"type": "uint256"
 			}
 		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "purchase",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"name": "percentageFromRandomness",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "pure",
 		"type": "function"
 	},
 	{
@@ -320,114 +371,11 @@
 		"inputs": [
 			{
 				"internalType": "bytes32",
-				"name": "requestId",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "uint256",
-				"name": "randomness",
-				"type": "uint256"
-			}
-		],
-		"name": "rawFulfillRandomness",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "renounceOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes32",
 				"name": "",
 				"type": "bytes32"
 			}
 		],
-		"name": "requestIdToSender",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_fee",
-				"type": "uint256"
-			}
-		],
-		"name": "setFee",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes32",
-				"name": "_keyhash",
-				"type": "bytes32"
-			}
-		],
-		"name": "setKeyHash",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "value",
-				"type": "uint256"
-			}
-		],
-		"name": "setMaxY",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "value",
-				"type": "uint256"
-			}
-		],
-		"name": "setMinY",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "probabilityDistributionAddress",
-				"type": "address"
-			}
-		],
-		"name": "setProbabilityDistribution",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "totalPurchases",
+		"name": "requestIdToKeyId",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -439,16 +387,16 @@
 		"type": "function"
 	},
 	{
-		"inputs": [
+		"inputs": [],
+		"name": "totalDefiKeys",
+		"outputs": [
 			{
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
-		"name": "transferOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	}
 ]
