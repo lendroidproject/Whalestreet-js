@@ -52,7 +52,8 @@ export default (provider: any, options: Options) => {
     AuctionRegistry: {
       currentEpoch: () => {
         return new Promise((resolve, reject) => {
-          contracts.AuctionRegistry.methods.auctionCurve
+          contracts.AuctionRegistry.methods
+            .auctionCurve()
             .call()
             .then((auctionCurve: string) => {
               const curve = new instance.eth.Contract(
