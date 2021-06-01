@@ -69,6 +69,44 @@ export default (provider: any, options: Options) => {
             .catch(reject);
         });
       },
+      minY: () => {
+        return new Promise((resolve, reject) => {
+          contracts.AuctionRegistry.methods
+            .auctionCurve()
+            .call()
+            .then((auctionCurve: string) => {
+              const curve = new instance.eth.Contract(
+                AuctionCurve as any,
+                auctionCurve
+              );
+              curve.methods
+                .minY()
+                .call()
+                .then(resolve)
+                .catch(reject);
+            })
+            .catch(reject);
+        });
+      },
+      maxY: () => {
+        return new Promise((resolve, reject) => {
+          contracts.AuctionRegistry.methods
+            .auctionCurve()
+            .call()
+            .then((auctionCurve: string) => {
+              const curve = new instance.eth.Contract(
+                AuctionCurve as any,
+                auctionCurve
+              );
+              curve.methods
+                .maxY()
+                .call()
+                .then(resolve)
+                .catch(reject);
+            })
+            .catch(reject);
+        });
+      },
       currentPrice: call(contracts.AuctionRegistry.methods.currentPrice),
       epochEndTimeFromTimestamp: (timestamp: any) => {
         return new Promise((resolve, reject) => {
