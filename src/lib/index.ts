@@ -1,11 +1,13 @@
 import Auctions from './Auctions';
-import Farming from './Farming';
 import B20 from './B20';
+import Farming from './Farming';
+import Wallet from './Wallet';
 
 const library: any = {
   Auctions,
+  B20,
   Farming,
-  B20
+  Wallet
 };
 
 export default library;

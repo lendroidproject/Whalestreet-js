@@ -19,14 +19,14 @@
       true,
       "call-signature"
     ],
-    "readonly-keyword": true,
-    "readonly-array": true,
-    "no-let": true,
+    "readonly-keyword": false,
+    "readonly-array": false,
+    "no-let": false,
     "no-object-mutation": true,
-    "no-delete": true,
+    "no-delete": false,
     "no-method-signature": true,
-    "no-this": true,
-    "no-class": true,
+    "no-this": false,
+    "no-class": false,
     "no-mixed-interface": false,
     "no-expression-statement": [
       true,
@@ -37,6 +37,7 @@
         ]
       }
     ],
-    "no-if-statement": true
+    "no-if-statement": false,
+    "curly": false
   }
 }
