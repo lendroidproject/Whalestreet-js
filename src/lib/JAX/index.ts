@@ -83,7 +83,8 @@ class JAX {
       totalSupply: call(contract.methods.totalSupply),
       unstake: send(contract.methods.unstake),
       totalLpTokens: call(contract.methods.totalLpTokens),
-      lpTokens: call(contract.methods.lpTokens)
+      lpTokens: call(contract.methods.lpTokens),
+      combine: send(contract.methods.combine),
     });
 
     const getNFTMethods = (contract: any) => ({
